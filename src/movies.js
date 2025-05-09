@@ -79,31 +79,65 @@ function orderAlphabetically(moviesArray) {
 }
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-/**
- * 0.- Mapear para devolver los minutos Totales.
- * 1.- Separar la duración por " ", donde la primera parte serán las Xh y la segunda la Ymin
- * 2.- la primera parte se multiplicará por 60 (horas a minutos) y se le sumarán a los minutos
- * 3.- los minutos totales se guaradrán en una variable, que será el nuevo valor de la duración del objeto.
- * 4.- Map debe devolver cada objeto actualizado y la función debe devolver todos los objetos actualizados que devuelve map: return {...movie, duration:durationTotal}
- */
 console.log(turnHoursToMinutes(movies));
 function turnHoursToMinutes(moviesArray) {
   console.log("\nIteration 7");
-
-    return moviesArray.map((e) => {
-      const hour = e.duration.split(' ')[0].replace('h', '')>0 ? Number(e.duration.split(' ')[0].replace('h', ''))*60: 0;
-      const minute = e.duration.split(' ')[1] ? Number(e.duration.split(' ')[1].replace('min', '')): 0;
-      return {...e, duration:`${hour+minute} min`};
-    });
-    
-  
+  return moviesArray.map((e) => {
+    const hour =
+      e.duration.split(" ")[0].replace("h", "") > 0
+        ? Number(e.duration.split(" ")[0].replace("h", "")) * 60
+        : 0;
+    const minute = e.duration.split(" ")[1]
+      ? Number(e.duration.split(" ")[1].replace("min", ""))
+      : 0;
+    return { ...e, duration: hour + minute };
+  });
 }
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {
-  console.log("\nIteration 8");
-}
 
+function bestYearAvg(moviesArray) {
+  if (moviesArray.length === 0) {
+    return null;
+  }
+
+  const data = [];
+  const scoreByYear = [];
+
+  moviesArray.forEach(movie => data.push(movie.year));
+  const yearsOfMovies = new Set(data);
+
+  yearsOfMovies.forEach(year => {
+    let totalScore = 0;
+    let count = 0;
+
+    moviesArray.forEach(movie => {
+      if (movie.year === year) {
+        totalScore += movie.score;
+        count++;
+      }
+    });
+
+    const averageScore = totalScore / count;
+    scoreByYear.push({ year, score: averageScore });
+  });
+
+  if (scoreByYear.length === 0) {
+    return null;
+  }
+
+  // Ordenar por puntuación descendente y luego por año ascendente
+  scoreByYear.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    } else {
+      return a.year - b.year;
+    }
+  });
+
+  return scoreByYear[0].year;
+}console.log("\nIteration 8");
+console.log(bestYearAvg(movies));
 // {
 //     "title": "The Shawshank Redemption",
 //     "year": 1994,
